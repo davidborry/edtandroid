@@ -20,12 +20,12 @@ public class Events {
     }
 
     public void generateEvents() {
-        mEvents.add(makeEvent(Classes.Concurrence, 9, 10, 2017, 8, 0, 10, 0));
-        mEvents.add(makeEvent(Classes.ComputerVision, 9, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeEvent(Classes.Anglais, 9, 10, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Concurrence, 9, 10, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.ComputerVision, 9, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Anglais, 9, 10, 2017, 13, 30, 15, 30));
     }
 
-    public WeekViewEvent makeEvent(Classes className, int day, int month, int year, int hourStart, int minStart, int hourEnd, int minEnd){
+    public WeekViewEvent makeTD(Classes className, int day, int month, int year, int hourStart, int minStart, int hourEnd, int minEnd){
         Calendar startTime = Calendar.getInstance();
         startTime.set(Calendar.HOUR_OF_DAY, hourStart);
         startTime.set(Calendar.MINUTE, minStart);
