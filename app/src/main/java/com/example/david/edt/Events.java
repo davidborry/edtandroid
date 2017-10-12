@@ -6,6 +6,8 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,6 +22,7 @@ public class Events {
     }
 
     public void generateEvents() {
+
         mEvents.add(makeTD(Classes.Concurrence, 9, 10, 2017, 8, 0, 10, 0));
         mEvents.add(makeTD(Classes.ComputerVision, 9, 10, 2017, 10, 15, 12, 15));
         mEvents.add(makeTD(Classes.Anglais, 9, 10, 2017, 13, 30, 15, 30));
@@ -43,6 +46,13 @@ public class Events {
         mEvents.add(makeTD(Classes.COO, 13, 10, 2017, 10, 15, 12, 15));
         mEvents.add(makeTD(Classes.COO, 13, 10, 2017, 13, 30, 22, 15));
 
+        Collections.sort(mEvents, new Comparator<WeekViewEvent>() {
+            @Override
+            public int compare(WeekViewEvent o1, WeekViewEvent o2) {
+                return o1.getStartTime().compareTo(o2.getStartTime());
+            }
+        });
+
 
     }
 
@@ -62,6 +72,7 @@ public class Events {
 
         WeekViewEvent event = new WeekViewEvent(this.id++,className.getName(), startTime, endTime);
         event.setColor(Color.parseColor(className.getColor()));
+        event.setLocation("O305");
         return event;
     }
 

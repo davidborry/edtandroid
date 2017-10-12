@@ -1,5 +1,7 @@
 package com.example.david.edt;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by david on 11/10/17.
  */
@@ -45,5 +47,17 @@ public enum Classes {
         this.color = color;
         this.amphi = amphi;
         this.td = td;
+    }
+
+    public static Classes getFromName(String name){
+        Classes[] classes = Classes.values();
+
+        for(int i = 0; i < classes.length; i++){
+            if(name.equals(classes[i].getName()))
+                return classes[i];
+        }
+
+        return null;
+
     }
 }

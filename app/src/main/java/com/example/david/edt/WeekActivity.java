@@ -24,11 +24,12 @@ import android.widget.Toast;
 import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
-import com.example.david.edt.fragments.EDTWeekFragment;
 import com.example.david.edt.views.EDTWeekView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +39,8 @@ import java.util.Locale;
 
 public class WeekActivity extends FragmentActivity {
     private Events events;
+    private EDTWeekView weekView;
+
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private final int CHECK_CODE = 0x1;
     private final int SHORT_DURATION = 1000;
@@ -66,14 +69,20 @@ public class WeekActivity extends FragmentActivity {
         Log.v("CLASSES",Classes.values()[0].toString());
 
 
-        EDTWeekView tabLayout = (EDTWeekView)  findViewById(R.id.weekView);
-        tabLayout.goToHour(8.00);
-        tabLayout.setHourHeight(144);
+        weekView = (EDTWeekView)  findViewById(R.id.weekView);
+        initMonth();
+
 
         Calendar today = Calendar.getInstance();
         Log.v("TODAYCAL", today.toString());
 
-        tabLayout.setMonthChangeListener(new MonthLoader.MonthChangeListener() {
+
+    }
+
+    private void initMonth(){
+        weekView.goToHour(8.00);
+        weekView.setHourHeight(144);
+        weekView.setMonthChangeListener(new MonthLoader.MonthChangeListener() {
             @Override
             public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
                 ArrayList<WeekViewEvent> eventsMonth = new ArrayList<WeekViewEvent>();
@@ -87,16 +96,14 @@ public class WeekActivity extends FragmentActivity {
             }
         });
 
-        tabLayout.setLongClickable(true);
-
-        tabLayout.setOnEventClickListener(new WeekView.EventClickListener() {
+        weekView.setOnEventClickListener(new WeekView.EventClickListener() {
             @Override
             public void onEventClick(WeekViewEvent event, RectF eventRect) {
-                Log.v("EVENTCLICK", "Event clicked");
+                goToNextCourse();
             }
         });
 
-        tabLayout.setEmptyViewLongPressListener(new WeekView.EmptyViewLongPressListener() {
+        weekView.setEmptyViewLongPressListener(new WeekView.EmptyViewLongPressListener() {
             @Override
             public void onEmptyViewLongPress(Calendar time) {
                 Log.v("LONGCLICK", "Long click");
@@ -150,6 +157,7 @@ public class WeekActivity extends FragmentActivity {
                 if(resultCode == RESULT_OK && null != data){
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
+
                     textbox.setText(result.get(0));
                     speakOut("Concurrence demain matin à 8h30 en O308?");
                 }
@@ -158,6 +166,28 @@ public class WeekActivity extends FragmentActivity {
             default:
                 break;
         }
+    }
+
+    public String goToNextCourse(){
+        Log.v("NEXTCOURSE","Next course");
+
+        Calendar today = Calendar.getInstance();
+
+        List<WeekViewEvent> weekViewEvents = events.getEvents();
+        for(int i = 0; i < weekViewEvents.size(); i++) {
+            WeekViewEvent event = weekViewEvents.get(i);
+            //Log.v("COURSE", weekViewEvents.get(i).getName());
+            if(today.compareTo(event.getStartTime()) < 0){
+                Log.v("COURSE", event.getName() + " , " + event.getStartTime().get(Calendar.HOUR_OF_DAY));
+                Calendar date = (Calendar) event.getStartTime().clone();
+                weekView.goToDate(date);
+                weekView.goToHour(event.getStartTime().get(Calendar.HOUR_OF_DAY));
+                return event.getName();
+            }
+        }
+
+        Log.v("COURSE", "Nothing found");
+        return null;
     }
 
     @Override
