@@ -44,7 +44,7 @@ public class Events {
 
         mEvents.add(makeTD(Classes.Compilation, 13, 10, 2017, 8, 0, 10, 0));
         mEvents.add(makeTD(Classes.COO, 13, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeTD(Classes.COO, 13, 10, 2017, 13, 30, 22, 15));
+        mEvents.add(makeTD(Classes.Management, 13, 10, 2017, 13, 30, 18, 15));
 
         Collections.sort(mEvents, new Comparator<WeekViewEvent>() {
             @Override
@@ -72,7 +72,7 @@ public class Events {
 
         WeekViewEvent event = new WeekViewEvent(this.id++,className.getName(), startTime, endTime);
         event.setColor(Color.parseColor(className.getColor()));
-        event.setLocation("O305");
+        event.setLocation(className.getAmphi());
         return event;
     }
 
@@ -91,6 +91,7 @@ public class Events {
 
         WeekViewEvent event = new WeekViewEvent(this.id++,className.getName(), startTime, endTime);
         event.setColor(Color.parseColor(className.getColor()));
+        event.setLocation(className.getTd());
         return event;
     }
 

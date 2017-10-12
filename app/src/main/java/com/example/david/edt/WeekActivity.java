@@ -37,14 +37,19 @@ import java.util.Locale;
  * Created by david on 09/10/17.
  */
 
+
 public class WeekActivity extends FragmentActivity {
     private Events events;
     private EDTWeekView weekView;
 
+    VoicePattern voicePattern;
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private final int CHECK_CODE = 0x1;
     private final int SHORT_DURATION = 1000;
     private Speaker speaker;
+
+    public static String[] MOIS = {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"};
+    public static String[] JOURS = {"Dimanche", "Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"};
 
     TextView textbox;
 
@@ -61,6 +66,7 @@ public class WeekActivity extends FragmentActivity {
         super.onCreate(savedInstanteState);
         setContentView(R.layout.activity_week);
 
+        voicePattern = new VoicePattern();
         textbox = (TextView) findViewById(R.id.textbox);
         textbox.setText("Reco vocale");
 
@@ -99,7 +105,7 @@ public class WeekActivity extends FragmentActivity {
         weekView.setOnEventClickListener(new WeekView.EventClickListener() {
             @Override
             public void onEventClick(WeekViewEvent event, RectF eventRect) {
-                goToNextCourse();
+           //     goToNextCourse();
             }
         });
 
@@ -157,9 +163,12 @@ public class WeekActivity extends FragmentActivity {
                 if(resultCode == RESULT_OK && null != data){
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-
                     textbox.setText(result.get(0));
-                    speakOut("Concurrence demain matin à 8h30 en O308?");
+
+                    if(voicePattern.isNextCours(result.get(0)))
+                        goToNextCourse();
+                    else
+                        speakOut("Je n'ai pas compris, pouvez vous répéter svp?");
                 }
                 break;
 
@@ -173,12 +182,14 @@ public class WeekActivity extends FragmentActivity {
 
         Calendar today = Calendar.getInstance();
 
+        //weekView.setNumberOfVisibleDays(1);
         List<WeekViewEvent> weekViewEvents = events.getEvents();
         for(int i = 0; i < weekViewEvents.size(); i++) {
             WeekViewEvent event = weekViewEvents.get(i);
             //Log.v("COURSE", weekViewEvents.get(i).getName());
             if(today.compareTo(event.getStartTime()) < 0){
                 Log.v("COURSE", event.getName() + " , " + event.getStartTime().get(Calendar.HOUR_OF_DAY));
+                speakEvent(event);
                 Calendar date = (Calendar) event.getStartTime().clone();
                 weekView.goToDate(date);
                 weekView.goToHour(event.getStartTime().get(Calendar.HOUR_OF_DAY));
@@ -186,8 +197,31 @@ public class WeekActivity extends FragmentActivity {
             }
         }
 
+        speakOut("Aucun cours prochainement");
         Log.v("COURSE", "Nothing found");
         return null;
+    }
+
+    public void speakEvent(WeekViewEvent event){
+        Calendar today = Calendar.getInstance();
+
+        Calendar c = event.getStartTime();
+        String name = event.getName();
+
+        int min = c.get(Calendar.MINUTE);
+
+        String day;
+        if(c.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH))
+            day = "aujourd'hui";
+        else if(c.get(Calendar.DAY_OF_MONTH)+0 == today.get(Calendar.DAY_OF_MONTH)+1)
+            day = "deux main";
+        else
+            day = JOURS[c.get(Calendar.DAY_OF_WEEK)-1]+" "+c.get(Calendar.DAY_OF_MONTH) + " " + MOIS[c.get(Calendar.MONTH)];
+
+        String hour = c.get(Calendar.HOUR_OF_DAY)+ " heure " + (min != 0 ? min : "");
+        String location = event.getLocation();
+
+        speakOut(name+ " " + day + " à "+hour+", en "+location);
     }
 
     @Override
