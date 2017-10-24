@@ -2,11 +2,13 @@ package com.example.david.edt;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView text;
     Button button, button2;
     private Speaker speaker;
+
 
     @Override
     protected void onStart(){
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         //promptSpeechInput();
     }
+
 
     private void speakOut(String text){
         Log.v("SPEAKING", "test");

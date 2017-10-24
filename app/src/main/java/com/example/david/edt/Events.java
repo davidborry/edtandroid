@@ -23,28 +23,52 @@ public class Events {
 
     public void generateEvents() {
 
-        mEvents.add(makeTD(Classes.Concurrence, 9, 10, 2017, 8, 0, 10, 0));
-        mEvents.add(makeTD(Classes.ComputerVision, 9, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeTD(Classes.Anglais, 9, 10, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Concurrence, 23, 10, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.ComputerVision, 23, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Anglais, 23, 10, 2017, 13, 30, 15, 30));
 
-        mEvents.add(makeClass(Classes.CPP, 10, 10, 2017, 8, 0, 9, 0));
-        mEvents.add(makeClass(Classes.Cryptographie, 10, 10, 2017, 9, 0, 10, 0));
-        mEvents.add(makeTD(Classes.COO, 10, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeTD(Classes.CPP, 10, 10, 2017, 13, 30, 15, 30));
-        mEvents.add(makeTD(Classes.Management, 10, 10, 2017, 15, 45, 17, 45));
+        mEvents.add(makeClass(Classes.CPP, 24, 10, 2017, 8, 0, 9, 0));
+        mEvents.add(makeClass(Classes.Cryptographie, 24, 10, 2017, 9, 0, 10, 0));
+        mEvents.add(makeTD(Classes.COO, 24, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.CPP, 24, 10, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Management, 24, 10, 2017, 15, 45, 17, 45));
 
-        mEvents.add(makeClass(Classes.Android, 11, 10, 2017, 8, 0, 9, 0));
-        mEvents.add(makeClass(Classes.Web, 11, 10, 2017, 9, 0, 10, 0));
-        mEvents.add(makeTD(Classes.Android, 11, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeTD(Classes.Cryptographie, 11, 10, 2017, 13, 30, 15, 30));
-        mEvents.add(makeTD(Classes.Chinois, 11, 10, 2017, 15, 45, 17, 45));
+        mEvents.add(makeClass(Classes.Android, 25, 10, 2017, 8, 0, 9, 0));
+        mEvents.add(makeClass(Classes.Web, 25, 10, 2017, 9, 0, 10, 0));
+        mEvents.add(makeTD(Classes.Android, 25, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Cryptographie, 25, 10, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Chinois, 25, 10, 2017, 15, 45, 17, 45));
 
-        mEvents.add(makeTD(Classes.Android, 12, 10, 2017, 8, 0, 10, 0));
-        mEvents.add(makeTD(Classes.Web, 12, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Android, 26, 10, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.Web, 26, 10, 2017, 10, 15, 12, 15));
 
-        mEvents.add(makeTD(Classes.Compilation, 13, 10, 2017, 8, 0, 10, 0));
-        mEvents.add(makeTD(Classes.COO, 13, 10, 2017, 10, 15, 12, 15));
-        mEvents.add(makeTD(Classes.Management, 13, 10, 2017, 13, 30, 18, 15));
+        mEvents.add(makeTD(Classes.Compilation, 27, 10, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.COO, 27, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Management, 27, 10, 2017, 13, 30, 18, 15));
+
+        mEvents.add(makeTD(Classes.Concurrence, 30, 10, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.ComputerVision, 30, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Anglais, 30, 10, 2017, 13, 30, 15, 30));
+
+        mEvents.add(makeClass(Classes.CPP, 31, 10, 2017, 8, 0, 9, 0));
+        mEvents.add(makeClass(Classes.Cryptographie, 31, 10, 2017, 9, 0, 10, 0));
+        mEvents.add(makeTD(Classes.COO, 31, 10, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.CPP, 31, 10, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Management, 31, 10, 2017, 15, 45, 17, 45));
+
+        mEvents.add(makeClass(Classes.Android, 1, 11, 2017, 8, 0, 9, 0));
+        mEvents.add(makeClass(Classes.Web, 1, 11, 2017, 9, 0, 10, 0));
+        mEvents.add(makeTD(Classes.Android, 1, 11, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Cryptographie, 1, 11, 2017, 13, 30, 15, 30));
+        mEvents.add(makeTD(Classes.Chinois, 1, 11, 2017, 15, 45, 17, 45));
+
+        mEvents.add(makeTD(Classes.Android, 2, 11, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.Web, 2, 11, 2017, 10, 15, 12, 15));
+
+        mEvents.add(makeTD(Classes.Compilation, 3, 11, 2017, 8, 0, 10, 0));
+        mEvents.add(makeTD(Classes.COO, 3, 11, 2017, 10, 15, 12, 15));
+        mEvents.add(makeTD(Classes.Management, 3, 11, 2017, 13, 30, 18, 15));
+
 
         Collections.sort(mEvents, new Comparator<WeekViewEvent>() {
             @Override

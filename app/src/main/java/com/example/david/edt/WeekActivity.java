@@ -2,8 +2,12 @@ package com.example.david.edt;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.RectF;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -15,7 +19,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -38,9 +46,12 @@ import java.util.Locale;
  */
 
 
-public class WeekActivity extends FragmentActivity {
+public class WeekActivity extends AppCompatActivity {
     private Events events;
     private EDTWeekView weekView;
+
+    public static final String PREFS_NAME = "MyPrefsFile";
+    SharedPreferences mSettings;
 
     VoicePattern voicePattern;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -53,6 +64,12 @@ public class WeekActivity extends FragmentActivity {
 
     TextView textbox;
 
+    OrientationEventListener orientationEventListener;
+    boolean switchPortrait;
+    boolean switchLandscape;
+
+    private boolean mVoice;
+
     @Override
     protected void onStart(){
         super.onStart();
@@ -63,7 +80,14 @@ public class WeekActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanteState){
+        switchPortrait = false;
+        switchLandscape = false;
+
         super.onCreate(savedInstanteState);
+
+        mSettings = getSharedPreferences(PREFS_NAME,0);
+        mVoice = mSettings.getBoolean("vocal_mode", false);
+
         setContentView(R.layout.activity_week);
 
         voicePattern = new VoicePattern();
@@ -82,7 +106,42 @@ public class WeekActivity extends FragmentActivity {
         Calendar today = Calendar.getInstance();
         Log.v("TODAYCAL", today.toString());
 
+        checkOrientation();
 
+    }
+
+    public void checkOrientation(){
+        Log.v("ORIENTATION", "CHECKING");
+        Resources res = getResources();
+        if(res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            weekView.setNumberOfVisibleDays(3);
+            Log.v("ORIENTATION", "Portrait");
+        }
+
+        else if(res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            weekView.setNumberOfVisibleDays(7);
+            Log.v("ORIENTATION", "Landscape");
+        }
+
+        Calendar date = Calendar.getInstance();
+       // weekView.goToDate(date);
+
+        /*orientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                Resources res = getResources();
+                if(res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    Log.v("ORIENTATION", "Landscape");
+                else if(res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+                    Log.v("ORIENTATION", "Portrait");
+            }
+        };
+
+        if(orientationEventListener.canDetectOrientation())
+            orientationEventListener.enable();
+
+        else
+            orientationEventListener.disable();*/
     }
 
     private void initMonth(){
@@ -93,10 +152,13 @@ public class WeekActivity extends FragmentActivity {
             public List<? extends WeekViewEvent> onMonthChange(int newYear, int newMonth) {
                 ArrayList<WeekViewEvent> eventsMonth = new ArrayList<WeekViewEvent>();
                 List<WeekViewEvent> allEvents = events.getEvents();
-
                 for(int i = 0; i < allEvents.size(); i++)
-                    if(allEvents.get(i).getStartTime().get(Calendar.MONTH) == newMonth)
+                    if(allEvents.get(i).getStartTime().get(Calendar.MONTH) == newMonth-1)
                         eventsMonth.add(allEvents.get(i));
+
+                Calendar calendar = Calendar.getInstance();
+                if(newMonth == (calendar.get(Calendar.MONTH)+1))
+                    weekView.goToToday();
 
                 return eventsMonth;
             }
@@ -109,14 +171,16 @@ public class WeekActivity extends FragmentActivity {
             }
         });
 
-        weekView.setEmptyViewLongPressListener(new WeekView.EmptyViewLongPressListener() {
-            @Override
-            public void onEmptyViewLongPress(Calendar time) {
-                Log.v("LONGCLICK", "Long click");
-                //speakOut("Bonjour");
-                promptSpeechInput();
-            }
-        });
+            weekView.setEmptyViewLongPressListener(new WeekView.EmptyViewLongPressListener() {
+                @Override
+                public void onEmptyViewLongPress(Calendar time) {
+                    Log.v("LONGCLICK", "Long click : "+mVoice);
+                    //speakOut("Bonjour");
+                    if(mVoice)
+                        promptSpeechInput();
+                }
+            });
+
     }
 
     private void promptSpeechInput(){
@@ -221,7 +285,7 @@ public class WeekActivity extends FragmentActivity {
         String hour = c.get(Calendar.HOUR_OF_DAY)+ " heure " + (min != 0 ? min : "");
         String location = event.getLocation();
 
-        speakOut(name+ " " + day + " à "+hour+", en "+location);
+        speakOut(name+ ", " + day + " à "+hour+", en "+location);
     }
 
     @Override
@@ -240,6 +304,43 @@ public class WeekActivity extends FragmentActivity {
         Intent check = new Intent();
         check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(check, CHECK_CODE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+
+        boolean v = mSettings.getBoolean("vocal_mode", false);
+        menu.findItem(R.id.checkAudioItem).setChecked(v);
+
+        return true;
+    }
+
+    //gère le click sur une action de l'ActionBar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.exit:
+               finish();
+               System.exit(0);
+
+            case R.id.checkAudioItem:
+               item.setChecked(!item.isChecked());
+                setVoice(item.isChecked());
+                break;
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setVoice(boolean v){
+        mVoice = v;
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean("vocal_mode", v);
+        editor.apply();
+
     }
 
 }

@@ -9,7 +9,7 @@
     <com.example.david.edt.views.EDTWeekView
         android:id="@+id/weekView"
         android:layout_width="match_parent"
-        android:layout_height="620dp"
+        android:layout_height="match_parent"
         app:eventTextColor="@android:color/white"
         app:textSize="12sp"
         app:hourHeight="60dp"
