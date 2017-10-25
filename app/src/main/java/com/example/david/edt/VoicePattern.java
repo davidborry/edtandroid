@@ -16,3 +16,8 @@ public class VoicePattern {
         return str.contains(NEXT_COURSE);
     }
 }
+
+
+
+
+

@@ -12,7 +12,7 @@ public enum Classes {
     ComputerVision("Computer Vision", "#00FF00", "Amphi Ouest", "0107"),
     Anglais("Anglais", "#0000FF", "O308", "O308"),
     Android("Android", "#00F504", "Amphi Forum", "O310"),
-    Chinois("Chinois", "#F9F900", "O108", "O108"),
+    Chinois("Chinois", "#0000DD", "O108", "O108"),
     CPP("Programmation Multi Paradigme", "#6088FF", "E+130", "O107"),
     COO("Conception Orientée Objet", "#8761FF", "E+130", "O109"),
     Compilation("Compilation", "#309999", "Amphi Est", "O107"),

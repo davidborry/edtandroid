@@ -3,29 +3,16 @@ package com.example.david.edt;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.RectF;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
-import android.view.View;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +23,6 @@ import com.example.david.edt.views.EDTWeekView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +42,7 @@ public class WeekActivity extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private final int CHECK_CODE = 0x1;
     private final int SHORT_DURATION = 1000;
-    private Speaker speaker;
+    private VoiceSynth voiceSynth;
 
     public static String[] MOIS = {"Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre"};
     public static String[] JOURS = {"Dimanche", "Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"};
@@ -122,26 +107,6 @@ public class WeekActivity extends AppCompatActivity {
             weekView.setNumberOfVisibleDays(7);
             Log.v("ORIENTATION", "Landscape");
         }
-
-        Calendar date = Calendar.getInstance();
-       // weekView.goToDate(date);
-
-        /*orientationEventListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                Resources res = getResources();
-                if(res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                    Log.v("ORIENTATION", "Landscape");
-                else if(res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-                    Log.v("ORIENTATION", "Portrait");
-            }
-        };
-
-        if(orientationEventListener.canDetectOrientation())
-            orientationEventListener.enable();
-
-        else
-            orientationEventListener.disable();*/
     }
 
     private void initMonth(){
@@ -164,26 +129,19 @@ public class WeekActivity extends AppCompatActivity {
             }
         });
 
-        weekView.setOnEventClickListener(new WeekView.EventClickListener() {
-            @Override
-            public void onEventClick(WeekViewEvent event, RectF eventRect) {
-           //     goToNextCourse();
-            }
-        });
-
             weekView.setEmptyViewLongPressListener(new WeekView.EmptyViewLongPressListener() {
                 @Override
                 public void onEmptyViewLongPress(Calendar time) {
                     Log.v("LONGCLICK", "Long click : "+mVoice);
                     //speakOut("Bonjour");
                     if(mVoice)
-                        promptSpeechInput();
+                        listen();
                 }
             });
 
     }
 
-    private void promptSpeechInput(){
+    private void listen(){
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault().getDisplayLanguage());
@@ -201,8 +159,8 @@ public class WeekActivity extends AppCompatActivity {
 
     private void speakOut(String text){
         Log.v("SPEAKING", "test");
-        if(!speaker.isSpeaking())
-            speaker.speach(text);
+        if(!voiceSynth.isSpeaking())
+            voiceSynth.speach(text);
     }
 
     @Override
@@ -212,7 +170,7 @@ public class WeekActivity extends AppCompatActivity {
         switch(requestCode){
             case CHECK_CODE:
                 if(resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                    speaker = new Speaker(this);
+                    voiceSynth = new VoiceSynth(this);
 
                 }
                 else{
@@ -290,7 +248,7 @@ public class WeekActivity extends AppCompatActivity {
 
     @Override
     protected void onStop(){
-        // speaker.shutdown();
+        // voiceSynth.shutdown();
         super.onStop();
     }
 

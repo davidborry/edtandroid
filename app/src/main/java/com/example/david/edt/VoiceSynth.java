@@ -9,12 +9,12 @@ import java.util.Locale;
  * Created by david on 06/10/17.
  */
 
-public class Speaker implements TextToSpeech.OnInitListener {
+public class VoiceSynth implements TextToSpeech.OnInitListener {
     private static Locale language = Locale.FRANCE;
     private static TextToSpeech tts;
     private boolean isReady = false;
 
-    public Speaker(Context context){
+    public VoiceSynth(Context context){
         tts = new TextToSpeech(context,this);
         tts.setPitch(1.0f);
         tts.setSpeechRate(0.9f);

@@ -2,19 +2,16 @@ package com.example.david.edt;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.hardware.SensorManager;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -24,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private final int SHORT_DURATION = 1000;
     TextView text;
     Button button, button2;
-    private Speaker speaker;
+    private VoiceSynth voiceSynth;
 
 
     @Override
@@ -65,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void speakOut(String text){
         Log.v("SPEAKING", "test");
-        if(!speaker.isSpeaking())
-            speaker.speach(text);
+        if(!voiceSynth.isSpeaking())
+            voiceSynth.speach(text);
     }
 
     private void promptSpeechInput(){
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode){
             case CHECK_CODE:
                 if(resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                    speaker = new Speaker(this);
+                    voiceSynth = new VoiceSynth(this);
 
                 }
                 else{
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop(){
-       // speaker.shutdown();
+       // voiceSynth.shutdown();
         super.onStop();
     }
 
